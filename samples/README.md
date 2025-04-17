@@ -2,10 +2,10 @@
 Below is a list of all audio files included in the sample archives.<br>
 If you would like to request a new audio file, please open an issue on this repository.
 
-These samples were generated using the following settings:
-Voice Style: Default or 'Narration' (Narration preferred but not always available)
-Speed Multiplier: 1.10-1.15 (Varies per voice)
-Trailing Silence: 25ms
+These samples were generated using the following settings:<br>
+Voice Style: Default or 'Narration' (Narration preferred but not always available)<br>
+Speed Multiplier: 1.10-1.15 (Varies per voice)<br>
+Trailing Silence: 25ms<br>
 Leading Silence: 0ms
 
 | path | text to play |
