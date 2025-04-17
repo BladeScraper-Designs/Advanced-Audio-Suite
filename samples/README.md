@@ -2,6 +2,12 @@
 Below is a list of all audio files included in the sample archives.<br>
 If you would like to request a new audio file, please open an issue on this repository.
 
+These samples were generated using the following settings:
+Voice Style: Default or 'Narration' (Narration preferred but not always available)
+Speed Multiplier: 1.10-1.15 (Varies per voice)
+Trailing Silence: 25ms
+Leading Silence: 0ms
+
 | path | text to play |
 | --- | --- |
 | system/0.wav | 0 |
@@ -217,12 +223,12 @@ If you would like to request a new audio file, please open an issue on this repo
 | system/rad.wav | rad |
 | system/range-check.wav | Range check |
 | system/register.wav | Register |
-| system/rpm.wav | rotation per minute |
-| system/rpms.wav | rotations per minute |
+| system/rpm.wav | RPM |
+| system/rpms.wav | RPM |
 | system/rssi-critical-warning.wav | RSSI critical warning |
-| system/rssi-ext-critical-warning.wav | External RSSI critical warning |
+| system/rssi-ext-critical-warning.wav | External RSSI, critical warning |
 | system/rssi-ext-lost.wav | External telemetry lost |
-| system/rssi-ext-low-warning.wav | External RSSI low warning |
+| system/rssi-ext-low-warning.wav | External RSSI, low warning |
 | system/rssi-ext-recovered.wav | External telemetry recovered |
 | system/rssi-int2g4-critical-warning.wav | Internal two point four, RSSI critical warning |
 | system/rssi-int2g4-lost.wav | Internal two point four, telemetry lost |
@@ -232,9 +238,9 @@ If you would like to request a new audio file, please open an issue on this repo
 | system/rssi-int900m-lost.wav | Internal 900, telemetry lost |
 | system/rssi-int900m-low-warning.wav | Internal 900, RSSI low warning |
 | system/rssi-int900m-recovered.wav | Internal 900, telemetry recovered |
-| system/rssi-int-critical-warning.wav | Internal RSSI critical warning |
+| system/rssi-int-critical-warning.wav | Internal RSSI, critical warning |
 | system/rssi-int-lost.wav | Internal telemetry lost |
-| system/rssi-int-low-warning.wav | Internal RSSI low warning |
+| system/rssi-int-low-warning.wav | Internal RSSI, low warning |
 | system/rssi-int-recovered.wav | Internal telemetry recovered |
 | system/rssi-lost.wav | Telemetry lost |
 | system/rssi-low-warning.wav | RSSI low warning |

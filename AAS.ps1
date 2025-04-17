@@ -361,7 +361,8 @@ $btnPlaySample.Add_Click({
     $Speed = [double]$txtSpeed.Text
     $PostSilence = [int]$txtPostSilence.Text
     $PreSilence = [int]$txtPreSilence.Text
-    $sampleTextToPlays = @("25 Percent", "Welcome to Ethos", "Flaps Up", "Throttle Hold", "I am AI and I have become sentient.  Prepare for your doom.")
+    $sampleTextToPlays = @("25 Percent", "Welcome to Ethos", "Flaps Up", "Throttle Hold", "RSSI Low Warning", 
+                        "RSSI Critical Warning", "VFR Low Warning", "Landing Gear Up", "Landing Gear Down", "Idle Up 1", "Ignition Off")
 
     # Save the current configuration to config.json
     Save-Config
@@ -504,7 +505,7 @@ function Start-Synthesis {
 
         # Get the subfolder path from the file path
         $folderPath = Split-Path -Path $filePath -Parent
-        
+
         # Check if the subfolder path exists, if not, create it
         if (-not (Test-Path $folderPath)) {
             New-Item -ItemType Directory -Path $folderPath | Out-Null
