@@ -339,6 +339,8 @@ If you would like to request a new audio file, please open an issue on this repo
 | idle-3.wav | idle 3 |
 | ignition-off.wav | ignition off |
 | ignition-on.wav | ignition on |
+| launch-5.wav | launch mode in 5 |
+| launch.wav | launch mode   |
 | landing.wav | landing |
 | lights-off.wav | lights off |
 | lights-on.wav | lights on |

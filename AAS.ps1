@@ -1,3 +1,7 @@
+Add-Type -AssemblyName PresentationFramework
+Add-Type -AssemblyName PresentationCore
+Add-Type -AssemblyName WindowsBase
+
 Write-Host "Starting Advanced Audio Suite..."
 
 #### Check Credentials ####
@@ -153,6 +157,20 @@ $txtPostSilence = $window.FindName("TxtPostSilence")
 $txtPreSilence = $window.FindName("TxtPreSilence")
 $btnPlaySample = $window.FindName("BtnPlaySample")
 $btnStartSynthesis = $window.FindName("BtnStartSynthesis")
+$txtOutput = $window.FindName("TxtOutput")
+
+Write-Host "Starting GUI..."
+
+# Function to write info to the GUI textbox
+function Write-OutputToTextBox {
+    param (
+        [string]$message
+    )
+    $window.Dispatcher.Invoke([action]{
+        $TxtOutput.AppendText("$message`n")
+        $TxtOutput.ScrollToEnd()
+    })
+}
 
 # Populate ComboBoxes with options
 $matchingStyles = @("Default", "Chat", "Narration") # Example data
@@ -200,6 +218,9 @@ function Update-Voices {
     $cmbVoice.ItemsSource = $filteredVoicesDisplay
     if ($filteredVoicesDisplay.Count -gt 0) {
         $cmbVoice.SelectedItem = $filteredVoicesDisplay[0]
+    }
+    if ($filteredVoices.Count -gt 0) {
+    Write-OutputToTextBox "Voices updated for $language - $region"
     }
 }
 
@@ -310,13 +331,15 @@ $btnStartSynthesis.Add_Click({
     # Map the selected language back to its code
     $LanguageCode = $languageMap.Keys | Where-Object { $languageMap[$_] -eq $Language }
     $ShortName = "$LanguageCode-$Region-$Voice"
+    
+    Write-OutputToTextBox "Starting synthesis..."
 
     # Perform synthesis operation here
     Start-Synthesis -Language $LanguageCode -Region $Region -ShortName $ShortName -Style $Style -Speed $Speed -PostSilence $PostSilence -PreSilence $PreSilence
     
     # Print Complete message
     $LanguageCode = $languageMap.Keys | Where-Object { $languageMap[$_] -eq $Language }
-    Write-Host "`nSpeech synthesis complete. Synthesized audio can be found in 'out/$LanguageCode/$Region'."
+    Write-OutputToTextBox "Speech synthesis complete. Synthesized audio can be found in 'out/$LanguageCode/$Region'."
     
     # Clear logs after running
     Clear-Logs
@@ -345,7 +368,7 @@ $btnPlaySample.Add_Click({
 
     # Get the current text to generate
     $textToGenerate = $sampleTextToPlays[$global:currentSampleIndex]
-    Write-Host "Playing sample..."
+    Write-OutputToTextBox "Playing Sample..."
 
     spx synthesize --ssml   "<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='$language-$region'>
                                     <voice name='$ShortName'>
@@ -381,16 +404,6 @@ function Start-Synthesis {
         [int]$PostSilence,
         [int]$PreSilence
     )
-    Write-Host "`n*************************************************"
-    Write-Host "Starting synthesis with the following settings:"
-
-    Write-Host "`nLanguage: $Language"
-    Write-Host "Region: $Region"
-    Write-Host "Voice: $Voice"
-    Write-Host "Style: $(if ([string]::IsNullOrEmpty($Style)) { 'Default' } else { $Style })"
-    Write-Host "Speed: $Speed"
-    Write-Host "PostSilence: $PostSilence"
-    Write-Host "PreSilence: $PreSilence"
 
     $baseFilePath = "out/$Language/$Region/$Voice/"
 
@@ -413,7 +426,7 @@ function Start-Synthesis {
     }
 
     #### Check csvData.csv and compare to $csvData to determine if any changes have been made ####
-    Write-Host "`nChecking for changes in .csv file from last run..."
+    Write-OutputToTextBox "Checking for changes in .csv file from last run..."
     Start-Sleep -Seconds 0.5
 
     $lastCsvData = Import-Csv -Path "data/lastCsvData.csv"
@@ -425,7 +438,7 @@ function Start-Synthesis {
         $lastRowPath = $lastCsvData | Where-Object { $_.Path -eq $rowPath }
         if ($lastRowPath -and $lastRowPath.'text to play' -ne $textToPlay) {
             $changedRows += $row
-            Write-Host "$rowPath text to play has changed.  Removing old audio file."
+            Write-OutputToTextBox "$rowPath text to play has changed.  Removing old audio file."
             if (Test-Path "$baseFilePath/$rowPath") {
                 Remove-Item -Path "$baseFilePath/$rowPath" -Force
             }
@@ -446,25 +459,25 @@ function Start-Synthesis {
         $textToPlay = $row.'text to play'
         if (-not $lastCsvData.Contains($rowPath)) {
             $newRows += $row
-            Write-Host "$rowPath is a new row."
+            Write-OutputToTextBox "$rowPath is a new row."
         }
     }
 
     # Figure out what to do with $csvData (what files to generate)
     if (($changedRows) -and ($newRows)) {
         $csvData = $changedRows + $newRows
-        Write-Host "`nChanges detected in .csv file.  Synthesizing new and changed rows."
+        Write-OutputToTextBox "Changes detected in .csv file.  Synthesizing new and changed rows."
     }
     elseif ($changedRows.Count -gt 0) {
         $csvData = $changedRows
-        Write-Host "`nChanges detected in .csv file.  Synthesizing changed rows."
+        Write-OutputToTextBox "Changes detected in .csv file.  Synthesizing changed rows."
     }
     elseif ($newRows.Count -gt 0) {
         $csvData = $newRows
-        Write-Host "`nChanges detected in .csv file.  Synthesizing new rows."
+        Write-OutputToTextBox "Changes detected in .csv file.  Synthesizing new rows."
     }
     else {
-        Write-Host "`nNo changes detected in .csv file. Only deleted or never-created files will be synthesized."
+        Write-OutputToTextBox "No changes detected in .csv file. Only deleted or never-created files will be synthesized."
         $csvData = Import-Csv -Path $csvFilePath 
     }
 
@@ -478,16 +491,20 @@ function Start-Synthesis {
         $filePath = $baseFilePath
         $filePath += $csvData[$i].PSObject.Properties.Value[0]
 
+        # Replace invalid characters in file path
+        $filePath = $filePath -replace ':', '_'
+
         # If audio file already exists for this iteration, skip it.
         if (Test-Path $filePath) {
-            Write-Host "`nFile $filePath already exists. Skipping synthesis."
+            Write-OutputToTextBox "File $filePath already exists. Skipping synthesis."
             continue
         }
 
-        Write-Host "`nSynthesizing $filePath..." -NoNewline
+        Write-OutputToTextBox "Synthesizing $filePath..." -NoNewline
 
         # Get the subfolder path from the file path
         $folderPath = Split-Path -Path $filePath -Parent
+        
         # Check if the subfolder path exists, if not, create it
         if (-not (Test-Path $folderPath)) {
             New-Item -ItemType Directory -Path $folderPath | Out-Null
@@ -499,7 +516,7 @@ function Start-Synthesis {
         $retryCount = 0
         while (-not ($synthesisFailed)) {
             if ($retryCount -eq 3) {
-                Write-Host "Audio synthesis failed. Retry limit reached. Re-run script to try again."
+                Write-OutputToTextBox "Audio synthesis failed. Retry limit reached. Re-run script to try again."
                 Remove-Item -Path $filePath -Force
                 break
             }
@@ -520,8 +537,8 @@ function Start-Synthesis {
             # Check if the file size is greater than 1KB (to detect if there was an error during synthesis)
             if ((Get-Item $filePath).Length -lt 1024) {
                 $retryCount++
-                Write-Host "File generated is invalid. There was an error during synthesis.  Retrying..."
-                Write-Host "Retry Count: $retryCount" 
+                Write-OutputToTextBox "File generated is invalid. There was an error during synthesis.  Retrying..."
+                Write-OutputToTextBox "Retry Count: $retryCount" 
                 Start-Sleep -Seconds 0.25
             }
             else {
@@ -532,7 +549,7 @@ function Start-Synthesis {
         }
         # Reset $synthesisFailed for the next iteration
         $synthesisFailed = $false 
-        Write-Host " Done"
+        Write-OutputToTextBox " Done"
     }
     
     # Export the csvData.csv to lastCsvData.csv for examination on next run
@@ -556,7 +573,7 @@ function Save-Config {
 
 # Function to clean up log files
 function Clear-Logs {
-    Write-Host "`nCleaning up..."
+    Write-OutputToTextBox "Cleaning up..."
     $logFiles = Get-ChildItem -Path $PSScriptRoot -Filter "log-*" -File
     foreach ($file in $logFiles) {
         Remove-Item -Path $file.FullName -Force
