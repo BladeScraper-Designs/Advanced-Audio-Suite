@@ -3,6 +3,7 @@ old
 
 key
 region
-*.json
 
+*.json
+*.log
 lastCsvData.csv
