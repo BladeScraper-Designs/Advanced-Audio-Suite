@@ -1,13 +1,25 @@
-# Sample Audio Files
-Below is a list of all audio files included in the sample archives.<br>
-If you would like to request a new audio file, please open an issue on this repository.
+# Samples
+| File Link | Region | Voice | Style | Speed Multiplier | Trailing Silence | Leading Silence |
+| --- | --- | --- | --- | --- | --- | --- |
+| [**en-AU-ElsieNeural.zip**](en-AU-ElsieNeural.zip) | English  (Australia) | ElsieNeural | Not Specified | Not Specified | Not Specified | Not Specified |
+| [**en-GB-BellaNeural.zip**](en-GB-BellaNeural.zip) | English  (United Kingdom) | BellaNeural | Not Specified | Not Specified | Not Specified | Not Specified |
+| [**en-GB-RyanNeural.zip**](en-GB-RyanNeural.zip) | English  (United Kingdom) | RyanNeural | Not Specified | Not Specified | Not Specified | Not Specified |
+| [**en-IN-PrabhatNeural.zip**](en-IN-PrabhatNeural.zip) | English  (India) | PrabhatNeural | Default | 1.15 | 25 | 0 |
+| [**en-US-AndrewNeural.zip**](en-US-AndrewNeural.zip) | English  (United States) | AndrewNeural | Not Specified | Not Specified | Not Specified | Not Specified |
+| [**en-US-Jenny_DragonHDLatestNeural.zip**](en-US-Jenny_DragonHDLatestNeural.zip) | English  (United States) | Jenny_DragonHDLatestNeural | Not Specified | Not Specified | Not Specified | Not Specified |
 
-These samples were generated using the following settings:<br>
-Voice Style: Default or 'Narration' (Narration preferred but not always available)<br>
-Speed Multiplier: 1.10-1.15 (Varies per voice)<br>
+Due to being uploaded prior to this README including the information, some of the above sample items may say 'not specified'.<br>
+For those, the following typically values were used:<br>
+
+Voice Style: Default or Narration (Narration preferred but not always available)<br>
+Speed Multiplier: 1.10-1.20 (Varies per voice)<br>
 Trailing Silence: 25ms<br>
 Leading Silence: 0ms
 
+The above table will be updated with the information when the samples are updated in the future.<br>
+
+## Audio File List
+The following table contains the list of audio files within the samples. The table is generated from the input CSV file.
 | path | text to play |
 | --- | --- |
 | system/0.wav | 0 |

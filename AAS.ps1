@@ -94,52 +94,65 @@ if (-not (Test-Path $voicesJsonPath)) {
 
 $xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        Title="Advanced Audio Suite" Height="530" Width="410">
-    <StackPanel Margin="10">
-        <Label Content="Advanced Audio Suite" FontSize="20" HorizontalAlignment="Center" Margin="10"/>
-        
-        <StackPanel Orientation="Horizontal" Margin="5">
-            <Label Content="Language:" FontSize="14" Width="150" Margin="0,0,0,0"/>
-            <ComboBox Name="CmbLanguage" Width="175"/>
-        </StackPanel>
-        
-        <StackPanel Orientation="Horizontal" Margin="5">
-            <Label Content="Region:" FontSize="14" Width="150" Margin="0,0,0,0"/>
-            <ComboBox Name="CmbRegion" Width="175"/>
-        </StackPanel>
-        
-        <StackPanel Orientation="Horizontal" Margin="5">
-            <Label Content="Voice:" FontSize="14" Width="150" Margin="0,0,0,0"/>
-            <ComboBox Name="CmbVoice" Width="175"/>
-        </StackPanel>
-        
-        <StackPanel Orientation="Horizontal" Margin="5">
-            <Label Content="Voice Style:" FontSize="14" Width="150" Margin="0,0,0,0"/>
-            <ComboBox Name="CmbStyle" Width="175"/>
-        </StackPanel>
-        
-        <StackPanel Orientation="Horizontal" Margin="5">
-            <Label Content="Speed Multiplier:" FontSize="14" Width="150" Margin="0,0,0,0"/>
-            <TextBox Name="TxtSpeed" Width="175"/>
-        </StackPanel>
-        
-        <StackPanel Orientation="Horizontal" Margin="5">
-            <Label Content="Trailing Silence (ms):" FontSize="14" Width="150" Margin="0,0,0,0"/>
-            <TextBox Name="TxtPostSilence" Width="175"/>
-        </StackPanel>
-        
-        <StackPanel Orientation="Horizontal" Margin="5">
-            <Label Content="Leading Silence (ms):" FontSize="14" Width="150" Margin="0,0,0,0"/>
-            <TextBox Name="TxtPreSilence" Width="175"/>
+        Title="Advanced Audio Suite" Height="600" Width="700">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Title -->
+            <RowDefinition Height="Auto"/> <!-- Language -->
+            <RowDefinition Height="Auto"/> <!-- Region -->
+            <RowDefinition Height="Auto"/> <!-- Voice -->
+            <RowDefinition Height="Auto"/> <!-- Voice Style -->
+            <RowDefinition Height="Auto"/> <!-- Speed Multiplier -->
+            <RowDefinition Height="Auto"/> <!-- Trailing Silence -->
+            <RowDefinition Height="Auto"/> <!-- Leading Silence -->
+            <RowDefinition Height="Auto"/> <!-- Buttons -->
+            <RowDefinition Height="*"/>   <!-- Output TextBox -->
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/> <!-- Labels -->
+            <ColumnDefinition Width="*"/>   <!-- Input Fields -->
+        </Grid.ColumnDefinitions>
+
+        <!-- Title -->
+        <Label Content="Advanced Audio Suite" FontSize="20" HorizontalAlignment="Center" Grid.ColumnSpan="2" Margin="10" Grid.Row="0"/>
+
+        <!-- Language -->
+        <Label Content="Language:" FontSize="14" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox Name="CmbLanguage" Width="200" Height="25" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0,5,10,5"/>
+
+        <!-- Region -->
+        <Label Content="Region:" FontSize="14" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox Name="CmbRegion" Width="200" Height="25" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Margin="0,5,10,5"/>
+
+        <!-- Voice -->
+        <Label Content="Voice:" FontSize="14" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox Name="CmbVoice" Width="200" Height="25" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Margin="0,5,10,5"/>
+
+        <!-- Voice Style -->
+        <Label Content="Voice Style:" FontSize="14" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox Name="CmbStyle" Width="200" Height="25" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Right" Margin="0,5,10,5"/>
+
+        <!-- Speed Multiplier -->
+        <Label Content="Speed Multiplier:" FontSize="14" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Name="TxtSpeed" Width="200" Height="25" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Right" Margin="0,5,10,5"/>
+
+        <!-- Trailing Silence -->
+        <Label Content="Trailing Silence (ms):" FontSize="14" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Name="TxtPostSilence" Width="200" Height="25" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Right" Margin="0,5,10,5"/>
+
+        <!-- Leading Silence -->
+        <Label Content="Leading Silence (ms):" FontSize="14" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Name="TxtPreSilence" Width="200" Height="25" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right" Margin="0,5,10,5"/>
+
+        <!-- Buttons -->
+        <StackPanel Orientation="Horizontal" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,10,0">
+            <Button Name="BtnPlaySample" Content="Play Sample" FontSize="14" Width="100" Height="25" Margin="0,0,10,0"/>
+            <Button Name="BtnStartSynthesis" Content="Start Synthesis" FontSize="14" Width="120" Height="25"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Margin="10,0,0,0" HorizontalAlignment="Right">
-        <Button Name="BtnPlaySample" Content="Play Sample" FontSize="14" Width="85" Margin="0,10,10,0"/>
-        <Button Name="BtnStartSynthesis" Content="Start Synthesis" FontSize="14" Width="100" Margin="0,10,45,0"/>
-        </StackPanel>
-        
-        <TextBox Name="TxtOutput" Margin="10" Height="100" IsReadOnly="True" VerticalScrollBarVisibility="Auto"/>
-    </StackPanel>
+        <!-- Output TextBox -->
+        <TextBox Name="TxtOutput" Grid.Row="9" Grid.ColumnSpan="2" Margin="10" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True"/>
+    </Grid>
 </Window>
 "@
 
@@ -556,6 +569,19 @@ function Start-Synthesis {
     # Export the csvData.csv to lastCsvData.csv for examination on next run
     $lastCsvDataPath = "data/lastCsvData.csv"
     Copy-Item -Path $csvFilePath -Destination $lastCsvDataPath -Force
+
+    # Create the settings.json file
+    $settings = @{
+        style = $Style
+        multiplier = $Speed
+        trailingSilence = $PostSilence
+        leadingSilence = $PreSilence
+    }
+
+    $settingsFilePath = Join-Path -Path $baseFilePath -ChildPath "settings.json"
+    $settings | ConvertTo-Json -Depth 10 | Set-Content -Path $settingsFilePath -Encoding utf8
+
+    Write-OutputToTextBox "Settings saved to $settingsFilePath"
 }
 
 # Function to save the current configuration to config.json
