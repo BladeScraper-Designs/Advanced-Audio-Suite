@@ -266,10 +266,6 @@ $cmbRegion.Add_SelectionChanged({
     Update-Voices -language $Language -region $Region
 })
 
-# Initial population of regions and voices based on default language
-Update-Regions -language $cmbLanguage.SelectedItem
-Update-Voices -language $cmbLanguage.SelectedItem -region $cmbRegion.SelectedItem
-
 # Set default values from config.json if it exists
 $configFilePath = Join-Path $PSScriptRoot "config/config.json"
 if (Test-Path $configFilePath) {

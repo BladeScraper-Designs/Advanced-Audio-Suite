@@ -1,11 +1,11 @@
 # Samples
 | File Link | Region | Voice | Style | Speed Multiplier | Trailing Silence | Leading Silence |
 | --- | --- | --- | --- | --- | --- | --- |
-| [**en-AU-ElsieNeural.zip**](en-AU-ElsieNeural.zip) | English  (Australia) | ElsieNeural | Not Specified | Not Specified | Not Specified | Not Specified |
-| [**en-GB-BellaNeural.zip**](en-GB-BellaNeural.zip) | English  (United Kingdom) | BellaNeural | Not Specified | Not Specified | Not Specified | Not Specified |
-| [**en-GB-RyanNeural.zip**](en-GB-RyanNeural.zip) | English  (United Kingdom) | RyanNeural | Not Specified | Not Specified | Not Specified | Not Specified |
+| [**en-AU-ElsieNeural.zip**](en-AU-ElsieNeural.zip) | English  (Australia) | ElsieNeural | Default | 1.15 | 25 | 0 |
+| [**en-GB-BellaNeural.zip**](en-GB-BellaNeural.zip) | English  (United Kingdom) | BellaNeural | Default | 1.15 | 25 | 0 |
+| [**en-GB-RyanNeural.zip**](en-GB-RyanNeural.zip) | English  (United Kingdom) | RyanNeural | Default | 1.15 | 25 | 0 |
 | [**en-IN-PrabhatNeural.zip**](en-IN-PrabhatNeural.zip) | English  (India) | PrabhatNeural | Default | 1.15 | 25 | 0 |
-| [**en-US-AndrewNeural.zip**](en-US-AndrewNeural.zip) | English  (United States) | AndrewNeural | Not Specified | Not Specified | Not Specified | Not Specified |
+| [**en-US-AndrewNeural.zip**](en-US-AndrewNeural.zip) | English  (United States) | AndrewNeural | Default | 1.15 | 25 | 0 |
 | [**en-US-Jenny_DragonHDLatestNeural.zip**](en-US-Jenny_DragonHDLatestNeural.zip) | English  (United States) | Jenny_DragonHDLatestNeural | Not Specified | Not Specified | Not Specified | Not Specified |
 
 Due to being uploaded prior to this README including the information, some of the above sample items may say 'not specified'.<br>
@@ -293,6 +293,7 @@ The following table contains the list of audio files within the samples. The tab
 | battery-cell-low.wav | battery average cell, low |
 | battery-cell-critical.wav | battery average cell, critical |
 | battery-cell.wav | battery average cell |
+| battery-not-charged.wav | battery is not charged! |
 | brakes-off.wav | brakes off |
 | brakes-on.wav | brakes on |
 | butterfly-off.wav | butterfly off |

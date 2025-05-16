@@ -270,6 +270,7 @@ battery.wav,battery
 battery-cell-low.wav,"battery average cell, low"
 battery-cell-critical.wav,"battery average cell, critical"
 battery-cell.wav,battery average cell
+battery-not-charged.wav,battery is not charged!
 brakes-off.wav,brakes off
 brakes-on.wav,brakes on
 butterfly-off.wav,butterfly off
