@@ -67,7 +67,7 @@ Then launch:
 ./.venv/bin/python AAS.py
 ```
 
-On first run, enter your Azure Speech key and region when prompted.
+On first run, enter your Azure Speech key and region when prompted.  You can get them from the [Azure Portal](https://docs.azure.cn/en-us/ai-services/multi-service-resource?pivots=azportal).
 
 ## Build local binary (PyInstaller)
 
