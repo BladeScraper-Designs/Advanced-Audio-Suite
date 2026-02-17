@@ -214,6 +214,7 @@ class SynthesisWorker(QThread):
 
         speech_config = speechsdk.SpeechConfig(subscription=self.key, region=self.region_value)
         speech_config.speech_synthesis_voice_name = self.short_name
+        failed_outputs: list[str] = []
 
         for row in target_rows:
             safe_relative_path = Path(row.path.replace(":", "_"))
@@ -247,6 +248,15 @@ class SynthesisWorker(QThread):
                     audio_config=audio_config,
                 )
                 result = synthesizer.speak_ssml_async(ssml).get()
+                if result is None:
+                    retry_count += 1
+                    self.log.emit(f"Synthesis returned no result for {output_file}. Retry count: {retry_count}")
+                    if retry_count >= 3:
+                        output_file.unlink(missing_ok=True)
+                        self.log.emit("Audio synthesis failed. Retry limit reached for this file.")
+                        failed_outputs.append(str(output_file))
+                        break
+                    continue
 
                 if result.reason != speechsdk.ResultReason.SynthesizingAudioCompleted:
                     retry_count += 1
@@ -261,7 +271,17 @@ class SynthesisWorker(QThread):
                 if retry_count >= 3:
                     output_file.unlink(missing_ok=True)
                     self.log.emit("Audio synthesis failed. Retry limit reached for this file.")
+                    failed_outputs.append(str(output_file))
                     break
+
+        if failed_outputs:
+            preview = ", ".join(failed_outputs[:5])
+            if len(failed_outputs) > 5:
+                preview += ", ..."
+            raise RuntimeError(
+                f"Synthesis failed for {len(failed_outputs)} file(s) after 3 retries. "
+                f"Examples: {preview}"
+            )
 
         self._write_rows(last_csv_path, current_rows)
         settings_payload = {
@@ -301,6 +321,57 @@ class SynthesisWorker(QThread):
                 writer.writerow({"path": row.path, "text to play": row.text_to_play})
 
 
+class PreviewWorker(QThread):
+    done = pyqtSignal(str)
+    failed = pyqtSignal(str)
+
+    def __init__(
+        self,
+        key: str,
+        region_value: str,
+        short_name: str,
+        ssml: str,
+        sample_wav_path: Path,
+        parent: QWidget | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self.key = key
+        self.region_value = region_value
+        self.short_name = short_name
+        self.ssml = ssml
+        self.sample_wav_path = sample_wav_path
+
+    def run(self) -> None:
+        try:
+            self._run_impl()
+        except Exception:
+            self.failed.emit(traceback.format_exc())
+
+    def _run_impl(self) -> None:
+        speech_config = speechsdk.SpeechConfig(subscription=self.key, region=self.region_value)
+        speech_config.speech_synthesis_voice_name = self.short_name
+
+        audio_config = speechsdk.audio.AudioOutputConfig(filename=str(self.sample_wav_path))
+        synthesizer = speechsdk.SpeechSynthesizer(
+            speech_config=speech_config,
+            audio_config=audio_config,
+        )
+        result = synthesizer.speak_ssml_async(self.ssml).get()
+        if result is None:
+            raise RuntimeError("Voice preview failed: no result returned from Azure Speech.")
+        if result.reason != speechsdk.ResultReason.SynthesizingAudioCompleted:
+            raise RuntimeError("Voice preview failed.")
+        if not self.sample_wav_path.exists() or self.sample_wav_path.stat().st_size == 0:
+            raise RuntimeError("Voice preview failed: no audio was written.")
+
+        if winsound is not None:
+            winsound.PlaySound(str(self.sample_wav_path), winsound.SND_FILENAME | winsound.SND_ASYNC)
+            self.done.emit("Voice preview played.")
+            return
+
+        self.done.emit(f"Voice preview generated at {self.sample_wav_path}")
+
+
 class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
@@ -323,6 +394,7 @@ class MainWindow(QMainWindow):
         self.voices: list[dict[str, Any]] = []
         self.language_map: dict[str, str] = {}
         self.worker: SynthesisWorker | None = None
+        self.preview_worker: PreviewWorker | None = None
 
         self._build_ui()
         self.key, self.azure_region = self._ensure_credentials()
@@ -451,6 +523,8 @@ class MainWindow(QMainWindow):
         speech_config = speechsdk.SpeechConfig(subscription=self.key, region=self.azure_region)
         synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config, audio_config=None)
         result = synthesizer.get_voices_async("").get()
+        if result is None:
+            raise RuntimeError("Failed to retrieve voices from Azure Speech SDK.")
         if result.reason != speechsdk.ResultReason.VoicesListRetrieved:
             raise RuntimeError("Failed to retrieve voices from Azure Speech SDK.")
 
@@ -666,6 +740,10 @@ class MainWindow(QMainWindow):
         self.config_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
     def _on_play_sample(self) -> None:
+        if self.preview_worker and self.preview_worker.isRunning():
+            QMessageBox.information(self, "Busy", "Voice preview is already running.")
+            return
+
         try:
             self._save_config()
             speed = float(self.txt_speed.text().strip())
@@ -699,26 +777,27 @@ class MainWindow(QMainWindow):
             post_silence=post_silence,
         )
 
-        try:
-            speech_config = speechsdk.SpeechConfig(subscription=self.key, region=self.azure_region)
-            speech_config.speech_synthesis_voice_name = short_name
-            sample_wav_path = self.data_dir / "sample_preview.wav"
-            audio_config = speechsdk.audio.AudioOutputConfig(filename=str(sample_wav_path))
-            synthesizer = speechsdk.SpeechSynthesizer(
-                speech_config=speech_config,
-                audio_config=audio_config,
-            )
-            result = synthesizer.speak_ssml_async(ssml).get()
-            if result.reason != speechsdk.ResultReason.SynthesizingAudioCompleted:
-                raise RuntimeError("Voice preview failed.")
-            if not sample_wav_path.exists() or sample_wav_path.stat().st_size == 0:
-                raise RuntimeError("Voice preview failed: no audio was written.")
-            if winsound is None:
-                raise RuntimeError("winsound is unavailable on this platform.")
-            winsound.PlaySound(str(sample_wav_path), winsound.SND_FILENAME | winsound.SND_ASYNC)
-            self._log("Voice preview played.")
-        except Exception as exc:
-            QMessageBox.critical(self, "Speech Error", str(exc))
+        self.btn_play.setEnabled(False)
+        self._log("Generating voice preview...")
+        self.preview_worker = PreviewWorker(
+            key=self.key,
+            region_value=self.azure_region,
+            short_name=short_name,
+            ssml=ssml,
+            sample_wav_path=self.data_dir / "sample_preview.wav",
+            parent=self,
+        )
+        self.preview_worker.done.connect(self._on_preview_done)
+        self.preview_worker.failed.connect(self._on_preview_failed)
+        self.preview_worker.start()
+
+    def _on_preview_done(self, message: str) -> None:
+        self.btn_play.setEnabled(True)
+        self._log(message)
+
+    def _on_preview_failed(self, details: str) -> None:
+        self.btn_play.setEnabled(True)
+        QMessageBox.critical(self, "Speech Error", details)
 
     def _on_start_synthesis(self) -> None:
         if self.worker and self.worker.isRunning():
