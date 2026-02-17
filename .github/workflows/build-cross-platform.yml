@@ -5,7 +5,7 @@ on:
     inputs:
       tag:
         description: 'Release tag to attach assets to (example: v1.0.1)'
-        required: false
+        required: true
         type: string
   release:
     types:
@@ -72,11 +72,23 @@ jobs:
           path: ${{ matrix.archive_name }}
           if-no-files-found: error
 
+      - name: Resolve release tag
+        id: tag
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            echo "value=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Attach asset to GitHub Release
-        if: github.event_name == 'release' || github.event.inputs.tag != ''
-        uses: softprops/action-gh-release@v2
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ github.event_name == 'release' && github.event.release.tag_name || github.event.inputs.tag }}
-          files: ${{ matrix.archive_name }}
+          tag: ${{ steps.tag.outputs.value }}
+          artifacts: ${{ matrix.archive_name }}
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          replacesArtifacts: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
