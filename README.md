@@ -25,29 +25,55 @@ English example:
 
 - https://github.com/FrSkyRC/ETHOS-Feedback-Community/blob/1.6/audio/en/en.csv
 
-## Setup
+## Quick start (easiest)
 
-From repo root:
+From repo root, run one install script for your OS:
+
+### Windows (PowerShell)
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+.\install-windows.ps1
 ```
 
-## Run
-
-From repo root:
+Then launch:
 
 ```powershell
-python AAS.py
+.\.venv\Scripts\python.exe AAS.py
+```
+
+### Linux
+
+```bash
+chmod +x ./install-linux.sh
+./install-linux.sh
+```
+
+Then launch:
+
+```bash
+./.venv/bin/python AAS.py
+```
+
+### macOS
+
+```bash
+chmod +x ./install-macos.sh
+./install-macos.sh
+```
+
+Then launch:
+
+```bash
+./.venv/bin/python AAS.py
 ```
 
 On first run, enter your Azure Speech key and region when prompted.
 
-## Build EXE
+## Build local binary (PyInstaller)
 
 From repo root:
+
+### Windows (PowerShell)
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
@@ -55,9 +81,18 @@ pip install pyinstaller
 pyinstaller AAS.spec
 ```
 
+### macOS / Linux (bash/zsh)
+
+```bash
+source .venv/bin/activate
+pip install pyinstaller
+pyinstaller AAS.spec
+```
+
 Build output:
 
-- `dist/AdvancedAudioSuite.exe`
+- `dist/AdvancedAudioSuite.exe` (Windows)
+- `dist/AdvancedAudioSuite` (macOS/Linux)
 
 ## Build for Windows, Linux, and macOS (GitHub Actions)
 
