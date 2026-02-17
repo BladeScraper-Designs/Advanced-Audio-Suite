@@ -35,6 +35,7 @@ except ImportError:
     winsound = None
 
 DEFAULT_STYLES = ["Default", "Chat", "Narration"]
+INVALID_PATH_CHARS = '<>:"/\\|?*'
 
 LANGUAGE_NAMES = {
     "af": "Afrikaans",
@@ -164,11 +165,14 @@ class SynthesisWorker(QThread):
             self.failed.emit(traceback.format_exc())
 
     def _run_impl(self) -> None:
+        safe_language_code = sanitize_path_component(self.language_code)
+        safe_region = sanitize_path_component(self.selected_region)
+        safe_voice_name = sanitize_path_component(self.short_name.split("-")[-1])
         base_output = (
             self.output_dir
-            / self.language_code
-            / self.selected_region
-            / self.short_name.split("-")[-1]
+            / safe_language_code
+            / safe_region
+            / safe_voice_name
         )
         base_output.mkdir(parents=True, exist_ok=True)
 
@@ -890,6 +894,12 @@ class MainWindow(QMainWindow):
 def speed_multiplier_to_rate(speed: float) -> str:
     percentage = (speed - 1.0) * 100.0
     return f"{percentage:+.2f}%"
+
+
+def sanitize_path_component(value: str) -> str:
+    sanitized = "".join("_" if ch in INVALID_PATH_CHARS else ch for ch in value)
+    sanitized = sanitized.strip().strip(".")
+    return sanitized or "default"
 
 
 def build_ssml(
