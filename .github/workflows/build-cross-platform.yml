@@ -30,7 +30,7 @@ jobs:
             archive_name: AdvancedAudioSuite-linux.tar.gz
           - os: macos-latest
             release_name: macos
-            archive_name: AdvancedAudioSuite-macos.tar.gz
+            archive_name: AdvancedAudioSuite-macos.app.zip
 
     steps:
       - name: Check out repository
@@ -63,7 +63,7 @@ jobs:
       - name: Package release asset (macOS)
         if: runner.os == 'macOS'
         shell: bash
-        run: tar -czf AdvancedAudioSuite-macos.tar.gz -C dist AdvancedAudioSuite
+        run: ditto -c -k --sequesterRsrc --keepParent dist/AdvancedAudioSuite.app AdvancedAudioSuite-macos.app.zip
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

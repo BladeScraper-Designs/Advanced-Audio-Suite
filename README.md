@@ -113,6 +113,6 @@ Artifacts are uploaded per platform as:
 
 - `AdvancedAudioSuite-windows.zip`
 - `AdvancedAudioSuite-linux.tar.gz`
-- `AdvancedAudioSuite-macos.tar.gz`
+- `AdvancedAudioSuite-macos.app.zip`
 
 When triggered by publishing a GitHub Release, those same files are also attached directly under the Release **Assets** section.

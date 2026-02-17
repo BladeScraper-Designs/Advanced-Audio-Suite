@@ -1,5 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import sys
+
 from PyInstaller.utils.hooks import collect_data_files, collect_dynamic_libs
 
 speech_binaries = collect_dynamic_libs('azure.cognitiveservices.speech')
@@ -41,3 +43,11 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
 )
+
+if sys.platform == "darwin":
+    app = BUNDLE(
+        exe,
+        name="AdvancedAudioSuite.app",
+        icon=None,
+        bundle_identifier=None,
+    )
