@@ -58,3 +58,22 @@ pyinstaller AAS.spec
 Build output:
 
 - `dist/AdvancedAudioSuite.exe`
+
+## Build for Windows, Linux, and macOS (GitHub Actions)
+
+This repo includes a GitHub Actions workflow at `.github/workflows/build-cross-platform.yml`.
+
+- Run it manually from the **Actions** tab (`Build cross-platform binaries`), or
+- publish a new GitHub Release to trigger it automatically.
+
+Each run builds on:
+
+- `windows-latest`
+- `ubuntu-latest`
+- `macos-latest`
+
+Artifacts are uploaded per platform as:
+
+- `AdvancedAudioSuite-windows-latest`
+- `AdvancedAudioSuite-ubuntu-latest`
+- `AdvancedAudioSuite-macos-latest`

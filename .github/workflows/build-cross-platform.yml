@@ -1,0 +1,42 @@
+name: Build cross-platform binaries
+
+on:
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build with PyInstaller
+        run: pyinstaller AAS.spec --noconfirm --clean
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AdvancedAudioSuite-${{ matrix.os }}
+          path: |
+            dist/AdvancedAudioSuite*
+          if-no-files-found: error
