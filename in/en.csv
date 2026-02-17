@@ -212,12 +212,12 @@ system/psis.wav,pounds per square inch
 system/rad.wav,rad
 system/range-check.wav,Range check
 system/register.wav,Register
-system/rpm.wav,rotation per minute
-system/rpms.wav,rotations per minute
+system/rpm.wav,RPM
+system/rpms.wav,RPM
 system/rssi-critical-warning.wav,RSSI critical warning
-system/rssi-ext-critical-warning.wav,External RSSI critical warning
+system/rssi-ext-critical-warning.wav,"External RSSI, critical warning"
 system/rssi-ext-lost.wav,External telemetry lost
-system/rssi-ext-low-warning.wav,External RSSI low warning
+system/rssi-ext-low-warning.wav,"External RSSI, low warning"
 system/rssi-ext-recovered.wav,External telemetry recovered
 system/rssi-int2g4-critical-warning.wav,"Internal two point four, RSSI critical warning"
 system/rssi-int2g4-lost.wav,"Internal two point four, telemetry lost"
@@ -227,9 +227,9 @@ system/rssi-int900m-critical-warning.wav,"Internal 900, RSSI critical warning"
 system/rssi-int900m-lost.wav,"Internal 900, telemetry lost"
 system/rssi-int900m-low-warning.wav,"Internal 900, RSSI low warning"
 system/rssi-int900m-recovered.wav,"Internal 900, telemetry recovered"
-system/rssi-int-critical-warning.wav,Internal RSSI critical warning
+system/rssi-int-critical-warning.wav,"Internal RSSI, critical warning"
 system/rssi-int-lost.wav,Internal telemetry lost
-system/rssi-int-low-warning.wav,Internal RSSI low warning
+system/rssi-int-low-warning.wav,"Internal RSSI, low warning"
 system/rssi-int-recovered.wav,Internal telemetry recovered
 system/rssi-lost.wav,Telemetry lost
 system/rssi-low-warning.wav,RSSI low warning
@@ -259,6 +259,7 @@ system/watts.wav,watts
 3d.wav,3D
 air.wav,air
 acro.wav,acro
+altitude.wav,altitude
 angle.wav,angle
 armed.wav,armed
 auto.wav,auto
@@ -266,6 +267,10 @@ autorotate.wav,autorotation
 battery-low.wav,battery low
 battery-critical.wav,battery critical
 battery.wav,battery
+battery-cell-low.wav,"battery average cell, low"
+battery-cell-critical.wav,"battery average cell, critical"
+battery-cell.wav,battery average cell
+battery-not-charged.wav,battery is not charged!
 brakes-off.wav,brakes off
 brakes-on.wav,brakes on
 butterfly-off.wav,butterfly off
@@ -320,6 +325,7 @@ fm-thermal-left.wav,flight mode thermal left
 fm-thermal-right.wav,flight mode thermal right
 gear-down.wav,gear down
 gear-up.wav,gear up
+headspeed.wav,headspeed
 horizon.wav,horizon
 idle-up-1.wav,idle up one
 idle-up-2.wav,idle up two
@@ -329,6 +335,8 @@ idle-2.wav,idle 2
 idle-3.wav,idle 3
 ignition-off.wav,ignition off
 ignition-on.wav,ignition on
+launch-5.wav,launch mode in 5
+launch.wav,launch mode  
 landing.wav,landing
 lights-off.wav,lights off
 lights-on.wav,lights on
@@ -357,6 +365,7 @@ self-level-mode.wav,self leveling mode
 sport.wav,sport
 start.wav,start
 stop.wav,stop
+tailspeed.wav,tailspeed
 take-off.wav,take off
 telemetry.wav,telemetry
 telemetry-log-off.wav,telemetry logging off
