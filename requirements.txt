@@ -1,0 +1,2 @@
+PyQt6>=6.8
+azure-cognitiveservices-speech>=1.42

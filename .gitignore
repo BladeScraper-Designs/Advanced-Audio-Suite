@@ -1,9 +1,28 @@
-out
-old
+old/
+out/
+data/
+config/
 
 key
 region
+keys.txt
 
-*.json
+log-*
 *.log
 lastCsvData.csv
+
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+.vscode/
+.idea/
+
+build/
+dist/
