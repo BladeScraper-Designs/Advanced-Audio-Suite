@@ -109,6 +109,8 @@ Each run builds on:
 
 Artifacts are uploaded per platform as:
 
-- `AdvancedAudioSuite-windows-latest`
-- `AdvancedAudioSuite-ubuntu-latest`
-- `AdvancedAudioSuite-macos-latest`
+- `AdvancedAudioSuite-windows.zip`
+- `AdvancedAudioSuite-linux.tar.gz`
+- `AdvancedAudioSuite-macos.tar.gz`
+
+When triggered by publishing a GitHub Release, those same files are also attached directly under the Release **Assets** section.

@@ -13,7 +13,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        include:
+          - os: windows-latest
+            release_name: windows
+            archive_name: AdvancedAudioSuite-windows.zip
+          - os: ubuntu-latest
+            release_name: linux
+            archive_name: AdvancedAudioSuite-linux.tar.gz
+          - os: macos-latest
+            release_name: macos
+            archive_name: AdvancedAudioSuite-macos.tar.gz
 
     steps:
       - name: Check out repository
@@ -33,10 +42,30 @@ jobs:
       - name: Build with PyInstaller
         run: pyinstaller AAS.spec --noconfirm --clean
 
+      - name: Package release asset (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Compress-Archive -Path dist/AdvancedAudioSuite.exe -DestinationPath AdvancedAudioSuite-windows.zip -Force
+
+      - name: Package release asset (Linux)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: tar -czf AdvancedAudioSuite-linux.tar.gz -C dist AdvancedAudioSuite
+
+      - name: Package release asset (macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: tar -czf AdvancedAudioSuite-macos.tar.gz -C dist AdvancedAudioSuite
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AdvancedAudioSuite-${{ matrix.os }}
-          path: |
-            dist/AdvancedAudioSuite*
+          name: AdvancedAudioSuite-${{ matrix.release_name }}
+          path: ${{ matrix.archive_name }}
           if-no-files-found: error
+
+      - name: Attach asset to GitHub Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ matrix.archive_name }}
