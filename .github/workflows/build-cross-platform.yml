@@ -2,9 +2,17 @@ name: Build cross-platform binaries
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to attach assets to (example: v1.0.1)'
+        required: false
+        type: string
   release:
     types:
       - published
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -65,7 +73,10 @@ jobs:
           if-no-files-found: error
 
       - name: Attach asset to GitHub Release
-        if: github.event_name == 'release'
+        if: github.event_name == 'release' || github.event.inputs.tag != ''
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event_name == 'release' && github.event.release.tag_name || github.event.inputs.tag }}
           files: ${{ matrix.archive_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

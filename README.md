@@ -101,6 +101,8 @@ This repo includes a GitHub Actions workflow at `.github/workflows/build-cross-p
 - Run it manually from the **Actions** tab (`Build cross-platform binaries`), or
 - publish a new GitHub Release to trigger it automatically.
 
+For an existing release tag, you can also run the workflow manually and provide the `tag` input (for example `v1.0`) to attach binaries to that release.
+
 Each run builds on:
 
 - `windows-latest`
